@@ -92,11 +92,15 @@ fn main() -> Result<()> {
                 .index(1),
         )
         .get_matches();
-    match matches.value_of("INPUT") {
-        Some("get") => Ok(()),
+    let do_continue = match matches.value_of("INPUT") {
+        Some("get") => Ok(true),
+        Some("store") | Some("erase") => Ok(false),
         Some(operation) => Err(anyhow!("Unsupported operation [{}]", operation)),
         _ => Err(anyhow!("Missing operation")),
     }?;
+    if !do_continue {
+        return Ok(());
+    }
     let username = matches.value_of("username").map(|u| String::from(u));
     let pass_name_opt = matches.value_of("pass_name").map(|p| String::from(p));
     let pass_name: String;
